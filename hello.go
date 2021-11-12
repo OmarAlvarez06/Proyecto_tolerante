@@ -1,6 +1,9 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/contrib/static"
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
 	r := gin.Default()
@@ -9,9 +12,15 @@ func main() {
 		c.String(200, "Hello, Wordl!")
 	})
 
-	r.GET("/helloOmar", func(c *gin.Context) {
-		c.String(200, "Hello, Omar!")
+	api := r.Group("/api")
+
+	api.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
 	})
+
+	r.Use(static.Serve("/", static.LocalFile("./views", true)))
 
 	r.Run(":3000")
 }
