@@ -9,18 +9,18 @@
 	</nav>
 	<ul>
 		<li><a href="/">Inicio</a></li>
-		<li><a href="/formAdd">Mostrar todos</a></li>
+		<li><a href="#">Mostrar todos los alumnos</a></li>
 	</ul>
 
-	<form action="/formAdd" method="POST" id="alumnoform">
+	<form action="/alumno_agregar" method="POST">
 		<label>Nombre del Alumno:</label>
-		<input type="text" name="nombre" value="">
+		<input type="text" name="nombre" value="" placeholder="Nombre">
 		<br><br>
 		<label>Nombre de la Materia:</label>
-		<input type="text" name="materia" value="">
+		<input type="text" name="materia" value="" placeholder="Materia">
 		<br><br>
 		<label>Calificacion:</label>
-		<input type="text" name="calificacion" value="">
+		<input type="text" name="calificacion" value="" placeholder="Calificacion">
 		<br><br>
 		<input type="submit" value="Agregar">
 	</form>

@@ -4,6 +4,8 @@ go 1.17
 
 require github.com/gin-gonic/gin v1.7.4
 
+require github.com/go-sql-driver/mysql v1.6.0 // indirect
+
 require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/gin-gonic/contrib v0.0.0-20201101042839-6a891bf89f19
