@@ -1,26 +1,23 @@
 package main
 
 import (
-	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	r := gin.Default()
+	r.LoadHTMLGlob("views/*")
 
-	r.GET("/hello", func(c *gin.Context) {
-		c.String(200, "Hello, Wordl!")
-	})
-
-	api := r.Group("/api")
-
-	api.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-
-	r.Use(static.Serve("/", static.LocalFile("./views", true)))
+	//RUTAS
+	r.GET("/", root)
 
 	r.Run(":3000")
 }
+
+//index.html
+func root(c *gin.Context) {
+	c.HTML(200, "index.html", nil)
+}
+
+//Alumno
+//Materia

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>Agregar Alumno</title>
+</head>
+<body>
+	<nav>
+		<h1>Ingresa la informacion del Alumno</h1>
+	</nav>
+	<ul>
+		<li><a href="/">Inicio</a></li>
+		<li><a href="/formAdd">Mostrar todos</a></li>
+	</ul>
+
+	<form action="/formAdd" method="POST" id="alumnoform">
+		<label>Nombre del Alumno:</label>
+		<input type="text" name="nombre" value="">
+		<br><br>
+		<label>Nombre de la Materia:</label>
+		<input type="text" name="materia" value="">
+		<br><br>
+		<label>Calificacion:</label>
+		<input type="text" name="calificacion" value="">
+		<br><br>
+		<input type="submit" value="Agregar">
+	</form>
+</body>
+</html>
