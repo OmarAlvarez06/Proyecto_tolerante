@@ -30,28 +30,28 @@ type AlumnoBD struct {
 }
 
 func getAlumnos() []*AlumnoBD {
-	// Open up our database connection.
+	//Abrir conexion a base de datos.
 	db, err := sql.Open("mysql", "tester:secret@tcp(db:3306)/test")
 
-	// if there is an error opening the connection, handle it
+	//Control de errores
 	if err != nil {
 		log.Print(err.Error())
 	}
 	defer db.Close()
 
-	// Execute the query
+	//Ejecutar Query
 	results, err := db.Query("SELECT * FROM alumnos")
 	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
+		panic(err.Error())
 	}
 
+	//Guardar datos obtenidos en objeto
 	var alumnos []*AlumnoBD
 	for results.Next() {
 		var u AlumnoBD
-		// for each row, scan the result into our tag composite object
 		err = results.Scan(&u.ID, &u.Name, &u.Subject, &u.Grade)
 		if err != nil {
-			panic(err.Error()) // proper error handling instead of panic in your app
+			panic(err.Error())
 		}
 
 		alumnos = append(alumnos, &u)
