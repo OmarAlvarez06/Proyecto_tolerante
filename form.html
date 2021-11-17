@@ -1,0 +1,104 @@
+<DOCTYPE html>
+    <html>
+        <head>
+            <title>Proyecto Tolerante a Fallas</title>
+            <style type="text/css">
+                * {
+                box-sizing: border-box;
+                }
+
+                /* Create three equal columns that floats next to each other */
+                .column {
+                float: left;
+                width: 600px;
+                padding-top: 40px;
+                height: 500px; /* Should be removed. Only for demonstration */
+                margin-top: 5px;
+                }
+                .row{
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    align-content: center;
+                }
+
+                /* Clear floats after the columns */
+                .row:after {
+                content: "";
+                display: table;
+                clear: both;
+                }
+                @media screen and (max-width: 600px) {
+                .column {
+                    width: 100%;
+                }
+                }
+                h1{
+                    color:#4d4d4d;
+                    text-align:center;
+                }
+                h2{
+                    text-align:center;
+                }
+                input { 
+                    width: 200px;
+                    height: 30px;
+                    margin: 0.5rem;
+                    border-radius: 5px;
+                    border: 0px;
+                }
+                form {
+                    width: 100%;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+                input[type=submit]:hover{
+                    background-color: rgb(47, 89, 128);
+                }
+                input[type=submit]{
+                    margin-top: 20px;
+                    background-color: rgb(138, 138, 138);
+                    color: whitesmoke;
+                }
+            </style>
+        </head>
+        <body>
+            <div style="background-color:rgb(47, 89, 128); padding: 20px;">
+                <h1 style="color:rgb(255, 255, 255); font-size: xx-large; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">- REGISTRO DE CALIFICACIONES -</h1>
+            </div>
+            <div class="row">
+                <div class="column" style="background-color:rgb(192, 205, 223);">
+                    <h2 style="font-size: large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">AGREGAR ALUMNO:</h2>
+                    <form action="/alumnos" method="POST" id="alumnosform">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre del alumno:</label>
+                        <input type="text" name="nombre" value="">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre de la materia:</label>
+                        <input type="text" name="materia" value="">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Calificacion:</label>
+                        <input type="text" name="calificacion" value="">
+                        <input type="submit" value="AGREGAR">
+                    </form>
+                </div>
+                <div class="column" style="background-color:rgb(205, 222, 243);">
+                    <h2 style="font-size: large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">PROMEDIO ALUMNO</h2>
+                    <form action="/promedioAlumno" method="POST" id="alumnoProm">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre del alumno:</label>
+                        <input type="text" name="nombre" value="">
+                        <input type="submit" value="CONSULTAR">
+                    </form>
+                </div>
+                <div class="column" style="background-color:rgb(221, 229, 238);">
+                    <h2 style="font-size: large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">PROMEDIO MATERIA</h2>
+                    <form action="/promedioMateria" method="POST" id="materiaProm">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre de la materia:</label>
+                        <input type="text" name="nombre" value="">
+                        <input type="submit" value="CONSULTAR">
+                    </form>
+                </div>
+            </div>
+        </body>
+    </html>
