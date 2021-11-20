@@ -40,7 +40,7 @@ func getAlumnos() []*AlumnoBD {
 	defer db.Close()
 
 	//Ejecutar Query
-	results, err := db.Query("SELECT * FROM alumnos")
+	results, err := db.Query("SELECT * FROM `alumnos`")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -64,6 +64,9 @@ func alumnoPage(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("Endpoint Hit: alumnoPage")
 	json.NewEncoder(w).Encode(alumnos)
+}
+func alumnosSave(w http.ResponseWriter, r *http.Request) {
+
 }
 
 //-------------------------------------------------------| FIN CÓDIGO BASE DE DATOS |-------------------------------------------------------
