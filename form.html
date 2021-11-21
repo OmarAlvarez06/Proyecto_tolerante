@@ -34,11 +34,14 @@
                 }
                 }
                 h1{
-                    color:#4d4d4d;
                     text-align:center;
+                    color:rgb(255, 255, 255);
+                    font-size: xx-large;
+                    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 }
                 h2{
                     text-align:center;
+                    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
                 }
                 input { 
                     width: 200px;
@@ -63,6 +66,80 @@
                     margin-top: 20px;
                     background-color: rgb(138, 138, 138);
                     color: whitesmoke;
+                }
+                button{
+                    width: 200px;
+                    height: 40px;
+                    margin: 0.5rem;
+                    border-radius: 5px;
+                    border: 0px;
+                    background-color: rgb(138, 138, 138);
+                    color: whitesmoke;
+                }
+                button:hover{
+                    background-color: rgb(47, 89, 128);
+                }
+                .modal-contenido{
+                    border-radius: 5px;
+                    background-color:rgb(47, 89, 128);
+                    color: whitesmoke;
+                    width:800px;
+                    height: 600px;
+                    padding: 10px 20px;
+                    margin: 20% auto;
+                }
+                .modal{
+                    background-color: rgba(255, 255, 255, 0.5);
+                    position:fixed;
+                    top:0;
+                    right:0;
+                    bottom:0;
+                    left:0;
+                    opacity:0;
+                    pointer-events:none;
+                    transition: all 0.5s;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                #miModal:target{
+                    opacity:1;
+                    pointer-events:auto;
+                }
+                a{
+                    text-decoration:none;
+                    width: 200px;
+                    height: 40px;
+                    margin: 0.5rem;
+                    border-radius: 5px;
+                    border: 0px;
+                    background-color: rgb(138, 138, 138);
+                    color: whitesmoke;
+                    font-size: 11pt;
+                    align-items: center;
+                    text-align: center;
+                    align-content: center;
+                    font-style: normal;
+                    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                    padding: 3px;
+                }
+                a:hover{
+                    background-color: rgb(47, 89, 128);
+                }
+                .exit{
+                    text-decoration:none;
+                    margin-top: 40px;
+                    border-radius: 5px;
+                    border: 0px;
+                    background-color: rgb(138, 138, 138);
+                    color: rgb(255, 255, 255);
+                    font-size: 11pt;
+                    font-style:normal;
+                    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                    padding: 15px 7px 5px 7px;
+                }
+                .exit:hover{
+                    background-color: crimson;
                 }
             </style>
         </head>
@@ -98,6 +175,49 @@
                         <input type="text" name="nombre" value="">
                         <input type="submit" value="CONSULTAR">
                     </form>
+                </div>
+            </div>
+            <div style="background-color:rgb(47, 89, 128); padding: 20px;">
+                <h1 style="color:rgb(255, 255, 255); font-size: xx-large; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;"></h1>
+            </div>
+            <div class="row">
+                <div class="column" style="background-color:rgb(192, 205, 223);">
+                    <h2 style="font-size: large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">BASE DE DATOS:</h2>
+                    <form>
+                        <a href="#miModal">MOSTRAR REGISTROS DE BASE DE DATOS</a>
+                        <div id="miModal" class="modal">
+                        <div class="modal-contenido">
+                            <a class="exit" href="#">X</a>
+                            <h2>REGISTROS DE ALUMNOS</h2>
+                            <table>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>NOMBRE</th>
+                                    <th>MATERIA</th>
+                                    <th>CALIFICACION</th>
+                                </tr>
+                                <?php
+                                $conn = mysqli_connect("3306","tester","secret","test");
+                                $sql = "SELECT * FROM alumnos";
+                                $result = $conn->query($sql);
+                                if($result->num_rows>0){
+                                    while($row = $result->fetch_assoc()){
+                                        echo "<tr><td>" . $row["name"] . "</td><td>" . $row["subject"] . "</td><td>" . $row["grade"] . "</td></tr>";
+                                    }
+                                }
+                                else{
+                                    echo "No Results";
+                                }
+                                $conn->close();
+                                ?>
+                            </table>
+                        </div>  
+                        </div>
+                    </form>
+                </div>
+                <div class="column" style="background-color:rgb(205, 222, 243);">
+                </div>
+                <div class="column" style="background-color:rgb(221, 229, 238);">
                 </div>
             </div>
         </body>

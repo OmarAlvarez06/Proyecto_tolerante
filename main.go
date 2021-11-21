@@ -53,20 +53,85 @@ func getAlumnos() []*AlumnoBD {
 		if err != nil {
 			panic(err.Error())
 		}
-
 		alumnos = append(alumnos, &u)
 	}
-
 	return alumnos
 }
+
+func AlumnosToMap() {
+	//Abrir conexion a base de datos.
+	db, err := sql.Open("mysql", "tester:secret@tcp(db:3306)/test")
+
+	//Control de errores
+	if err != nil {
+		log.Print(err.Error())
+	}
+	defer db.Close()
+
+	//Ejecutar Query
+	results, err := db.Query("SELECT * FROM `alumnos`")
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//Guardar datos obtenidos en objeto
+	for results.Next() {
+		var u AlumnoBD
+		err = results.Scan(&u.ID, &u.Name, &u.Subject, &u.Grade)
+		if err != nil {
+			panic(err.Error())
+		}
+		data := Alumnos{u.Name, u.Subject, u.Grade}
+		materiaAux := make(map[string]float64)
+		alumnoAux := make(map[string]float64)
+		calificacionAux, _ := strconv.ParseFloat(data.Grade, 64)
+		materiaAux[data.Subject] = calificacionAux
+		alumnoAux[data.Name] = calificacionAux
+
+		if _, err := alumnosMap[data.Name]; err {
+			alumnosMap[data.Name][data.Subject] = calificacionAux
+			if _, err := materiasMap[data.Subject]; err {
+				materiasMap[data.Subject][data.Name] = calificacionAux
+			} else {
+				materiasMap[data.Subject] = alumnoAux
+			}
+		} else {
+			alumnosMap[data.Name] = materiaAux
+			if _, err := materiasMap[data.Subject]; err {
+				materiasMap[data.Subject][data.Name] = calificacionAux
+			} else {
+				materiasMap[data.Subject] = alumnoAux
+			}
+		}
+	}
+}
+
 func alumnoPage(w http.ResponseWriter, r *http.Request) {
 	alumnos := getAlumnos()
-
 	fmt.Println("Endpoint Hit: alumnoPage")
 	json.NewEncoder(w).Encode(alumnos)
 }
+
 func alumnosSave(w http.ResponseWriter, r *http.Request) {
 
+}
+
+func setAlumnoToBD(alumno Alumnos) {
+	//Abrir conexion a base de datos.
+	db, err := sql.Open("mysql", "tester:secret@tcp(db:3306)/test")
+
+	//Control de errores
+	if err != nil {
+		log.Print(err.Error())
+	}
+
+	sqlStatement := "INSERT INTO alumnos(name,subject,grade) VALUES(?,?,?)"
+	add, err := db.Query(sqlStatement, alumno.Name, alumno.Subject, alumno.Grade)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(add)
+	defer db.Close()
 }
 
 //-------------------------------------------------------| FIN CÓDIGO BASE DE DATOS |-------------------------------------------------------
@@ -82,6 +147,7 @@ func (info *infoServer) Add(data Alumnos) {
 var auxAlumnos infoServer
 
 func registroCalif(data []string, reply *string) error {
+
 	if _, err := alumnosMap[data[0]][data[1]]; err {
 		*reply = "ERROR. Ya se ha registrado la calificacion"
 		return nil
@@ -170,6 +236,7 @@ func alumnos(res http.ResponseWriter, req *http.Request) {
 		if req.RequestURI == "/alumnos" {
 			fmt.Println(req.PostForm)
 			data := Alumnos{Name: req.FormValue("nombre"), Subject: req.FormValue("materia"), Grade: req.FormValue("calificacion")}
+			setAlumnoToBD(data)
 			var info []string
 			info = append(info, data.Name)
 			info = append(info, data.Subject)
@@ -250,6 +317,7 @@ func alumnos(res http.ResponseWriter, req *http.Request) {
 }
 
 func form(res http.ResponseWriter, req *http.Request) {
+	AlumnosToMap()
 	res.Header().Set(
 		"Content-Type",
 		"text/html",

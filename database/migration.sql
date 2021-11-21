@@ -19,5 +19,3 @@ INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Alumno1', 'Programac
 INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Alumno2', 'Metodos Matematicos I', '95');
 
 INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Alumno3', 'Sistemas Distribuidos', '98');
-
-/*INSERT INTO `users` (`name`) VALUES ('Isaias'), ('Aldo Jesé'), ('Itzel'), ('Victor Ulises');*/
