@@ -45,7 +45,7 @@ func getAlumnos() []*AlumnoBD {
 		panic(err.Error())
 	}
 
-	//Guardar datos obtenidos en objeto
+	//Guardar datos obtenidos en objetos
 	var alumnos []*AlumnoBD
 	for results.Next() {
 		var u AlumnoBD
@@ -112,10 +112,6 @@ func alumnoPage(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(alumnos)
 }
 
-func alumnosSave(w http.ResponseWriter, r *http.Request) {
-
-}
-
 func setAlumnoToBD(alumno Alumnos) {
 	//Abrir conexion a base de datos.
 	db, err := sql.Open("mysql", "tester:secret@tcp(db:3306)/test")
@@ -132,6 +128,114 @@ func setAlumnoToBD(alumno Alumnos) {
 	}
 	fmt.Println(add)
 	defer db.Close()
+}
+func searchAlumnoInDB(alumno Alumnos) int {
+	alumnos := getAlumnos()
+	var id int
+
+	//Leer los datos del alumnos y buscar el alumno en especifico
+	for _, valor := range alumnos {
+		if valor.Name == alumno.Name {
+			if valor.Subject == alumno.Subject {
+				if valor.Grade == alumno.Grade {
+					id = valor.ID
+				}
+			}
+		}
+	}
+
+	return id //return ID
+}
+func updateAlumnoToDB(alumno Alumnos, valor string, opcion string) string {
+
+	//Buscar el id del nombre en alumnos
+	id := searchAlumnoInDB(alumno)
+
+	var result string
+
+	//Abrir conexion a base de datos.
+	db, err := sql.Open("mysql", "tester:secret@tcp(db:3306)/test")
+
+	//Control de errores
+	if err != nil {
+		log.Print(err.Error())
+	}
+
+	switch opcion {
+	case "nombre":
+		sqlStatement := "UPDATE alumnos SET name = ? WHERE id = ?"
+		add, err := db.Query(sqlStatement, valor, id)
+
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(add)
+		defer db.Close()
+
+		result = "Actualizado correctamente ->" + " Nombre: " + valor + " por Nombre: " + alumno.Name
+
+	case "materia":
+		sqlStatement := "UPDATE alumnos SET subject = ? WHERE id = ?"
+		add, err := db.Query(sqlStatement, valor, id)
+
+		if err != nil {
+			panic(err)
+		}
+
+		fmt.Println(add)
+		defer db.Close()
+
+		result = "Actualizado correctamente ->" + " Materia: " + valor + " por Materia: " + alumno.Subject
+
+	case "calificacion":
+		calificacionAux, _ := strconv.ParseFloat(valor, 64)
+		if calificacionAux <= 100 && calificacionAux >= 0 {
+			sqlStatement := "UPDATE alumnos SET grade = ? WHERE id = ?"
+			add, err := db.Query(sqlStatement, valor, id)
+
+			if err != nil {
+				panic(err)
+			}
+
+			fmt.Println(add)
+			defer db.Close()
+		} else {
+			result = "ERROR. Calificaci&oacute;n no modificada"
+
+		}
+		result = "Actualizado correctamente -> " + " Calificaci&oacute;n: " + valor + " por Calificaci&oacute;n: " + alumno.Grade
+	}
+
+	return result
+}
+func deleteAlumnoInDB(alumno Alumnos) string {
+	//Buscar el id del nombre en alumnos
+	id := searchAlumnoInDB(alumno)
+
+	var result string
+
+	//Abrir conexion a base de datos.
+	db, err := sql.Open("mysql", "tester:secret@tcp(db:3306)/test")
+
+	//Control de errores
+	if err != nil {
+		log.Print(err.Error())
+	}
+
+	sqlStatement := "DELETE FROM alumnos WHERE id = ?"
+	add, err := db.Query(sqlStatement, id)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(add)
+	defer db.Close()
+
+	result = "Eliminado correctamente ->" + "Alumno:" + alumno.Name
+
+	return result
 }
 
 //-------------------------------------------------------| FIN CÓDIGO BASE DE DATOS |-------------------------------------------------------
@@ -235,22 +339,98 @@ func alumnos(res http.ResponseWriter, req *http.Request) {
 		}
 		if req.RequestURI == "/alumnos" {
 			fmt.Println(req.PostForm)
-			data := Alumnos{Name: req.FormValue("nombre"), Subject: req.FormValue("materia"), Grade: req.FormValue("calificacion")}
-			setAlumnoToBD(data)
-			var info []string
-			info = append(info, data.Name)
-			info = append(info, data.Subject)
-			info = append(info, data.Grade)
 			var result string
-			err := registroCalif(info, &result)
-			if err != nil {
-				fmt.Println(err)
+			data := Alumnos{Name: req.FormValue("nombre"), Subject: req.FormValue("materia"), Grade: req.FormValue("calificacion")}
+			calificacionAux, _ := strconv.ParseFloat(data.Grade, 64)
+			if data.Name == "" || data.Subject == "" || (calificacionAux > 100 || calificacionAux < 0) {
+				result = "ERROR. Alg&uacute;n campo no cumple con las especificaciones"
 			} else {
-				if result != "ERROR. Ya se ha registrado la calificacion" {
-					auxAlumnos.Add(data)
+				setAlumnoToBD(data)
+				var info []string
+				info = append(info, data.Name)
+				info = append(info, data.Subject)
+				info = append(info, data.Grade)
+				err := registroCalif(info, &result)
+				if err != nil {
+					fmt.Println(err)
+				} else {
+					if result != "ERROR. Ya se ha registrado la calificacion" {
+						auxAlumnos.Add(data)
+					}
 				}
+				fmt.Println(auxAlumnos)
 			}
-			fmt.Println(auxAlumnos)
+			res.Header().Set(
+				"Content-Type",
+				"text/html",
+			)
+			fmt.Fprintf(
+				res,
+				cargarHtml("respuesta.html"),
+				result,
+			)
+		}
+		if req.RequestURI == "/editarAlumno" {
+			fmt.Println(req.PostForm)
+			data := Alumnos{Name: req.FormValue("nombre"), Subject: req.FormValue("materia"), Grade: req.FormValue("calificacion")}
+			opcion := req.FormValue("opcion")
+			valor := req.FormValue("valor")
+			if valor == "" {
+				result := "Error, campo vac&iacute;o"
+				res.Header().Set(
+					"Content-Type",
+					"text/html",
+				)
+				fmt.Fprintf(
+					res,
+					cargarHtml("respuesta.html"),
+					result,
+				)
+			}
+			result := updateAlumnoToDB(data, valor, opcion)
+
+			for k := range alumnosMap {
+				delete(alumnosMap, k)
+			}
+			for k := range materiasMap {
+				delete(materiasMap, k)
+			}
+
+			AlumnosToMap()
+			res.Header().Set(
+				"Content-Type",
+				"text/html",
+			)
+			fmt.Fprintf(
+				res,
+				cargarHtml("respuesta.html"),
+				result,
+			)
+		}
+		if req.RequestURI == "/eliminarAlumno" {
+			fmt.Println(req.PostForm)
+			data := Alumnos{Name: req.FormValue("nombre"), Subject: req.FormValue("materia"), Grade: req.FormValue("calificacion")}
+			if data.Name == "" || data.Grade == "" || data.Subject == "" {
+				result := "Error, campo vac&iacute;o"
+				res.Header().Set(
+					"Content-Type",
+					"text/html",
+				)
+				fmt.Fprintf(
+					res,
+					cargarHtml("respuesta.html"),
+					result,
+				)
+			}
+			result := deleteAlumnoInDB(data)
+			for k := range alumnosMap {
+				delete(alumnosMap, k)
+			}
+			for k := range materiasMap {
+				delete(materiasMap, k)
+			}
+
+			AlumnosToMap()
 			res.Header().Set(
 				"Content-Type",
 				"text/html",
@@ -264,6 +444,18 @@ func alumnos(res http.ResponseWriter, req *http.Request) {
 		if req.RequestURI == "/promedioAlumno" {
 			fmt.Println(req.PostForm)
 			data := req.FormValue("nombre")
+			if data == "" {
+				result := "Error, campo vac&iacute;o"
+				res.Header().Set(
+					"Content-Type",
+					"text/html",
+				)
+				fmt.Fprintf(
+					res,
+					cargarHtml("respuesta.html"),
+					result,
+				)
+			}
 			var result string
 			err := obtenerPromedioAlumno(data, &result)
 			if err != nil {
@@ -282,6 +474,18 @@ func alumnos(res http.ResponseWriter, req *http.Request) {
 		if req.RequestURI == "/promedioMateria" {
 			fmt.Println(req.PostForm)
 			data := req.FormValue("nombre")
+			if data == "" {
+				result := "Error, campo vac&iacute;o"
+				res.Header().Set(
+					"Content-Type",
+					"text/html",
+				)
+				fmt.Fprintf(
+					res,
+					cargarHtml("respuesta.html"),
+					result,
+				)
+			}
 			var result string
 			err := obtenerPromedioMateria(data, &result)
 			if err != nil {
@@ -336,8 +540,11 @@ func cargarHtml(a string) string {
 func main() {
 	materiasMap = make(map[string]map[string]float64)
 	alumnosMap = make(map[string]map[string]float64)
-	http.HandleFunc("/form", form)
+
+	http.HandleFunc("/", form)
 	http.HandleFunc("/alumnos", alumnos)
+	http.HandleFunc("/editarAlumno", alumnos)
+	http.HandleFunc("/eliminarAlumno", alumnos)
 	http.HandleFunc("/promedioAlumno", alumnos)
 	http.HandleFunc("/promedioMateria", alumnos)
 	http.HandleFunc("/promedioGeneral", alumnos)
