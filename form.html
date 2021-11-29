@@ -50,6 +50,13 @@
                     border-radius: 5px;
                     border: 0px;
                 }
+                select { 
+                    width: 200px;
+                    height: 30px;
+                    margin: 0.5rem;
+                    border-radius: 5px;
+                    border: 0px;
+                }
                 form {
                     width: 100%;
                     max-width: 600px;
@@ -216,8 +223,36 @@
                     </form>
                 </div>
                 <div class="column" style="background-color:rgb(205, 222, 243);">
+                    <h2 style="font-size: large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">EDITAR ALUMNO:</h2>
+                    <form action="/editarAlumno" method="POST" id="alumnosform">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre del alumno:</label>
+                        <input type="text" name="nombre" value="">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre de la materia:</label>
+                        <input type="text" name="materia" value="">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Calificaci&oacute;n:</label>
+                        <input type="text" name="calificacion" value="">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Opci&oacute;n:</label>
+                        <select id="opcion" name="opcion">
+                            <option value="nombre">Nombre</option>
+                            <option value="materia">Materia</option>
+                            <option value="calificacion">Calificaci&oacute;n</option>
+                        </select>
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Valor:</label>
+                        <input type="text" name="valor" value="">
+                        <input type="submit" value="EDITAR">
+                    </form>
                 </div>
                 <div class="column" style="background-color:rgb(221, 229, 238);">
+                    <h2 style="font-size: large; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">ELIMINAR ALUMNO:</h2>
+                    <form action="eliminarAlumno" method="POST" id="alumnosform">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre del alumno:</label>
+                        <input type="text" name="nombre" value="">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Nombre de la materia:</label>
+                        <input type="text" name="materia" value="">
+                        <label style="font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-size: medium;">Calificacion:</label>
+                        <input type="text" name="calificacion" value="">
+                        <input type="submit" value="ELIMINAR">
+                    </form>
                 </div>
             </div>
         </body>

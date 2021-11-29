@@ -14,8 +14,8 @@ CREATE TABLE `alumnos`
     PRIMARY KEY (`id`)
 );
 
-INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Alumno1', 'Programacion', '90');
+INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Omar', 'Programacion', '90');
 
-INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Alumno2', 'Metodos Matematicos I', '95');
+INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Isaias', 'Metodos Matematicos I', '95');
 
-INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Alumno3', 'Sistemas Distribuidos', '98');
+INSERT INTO `alumnos` (`name`, `subject`, `grade`) VALUES ('Carlos', 'Sistemas Distribuidos', '98');
