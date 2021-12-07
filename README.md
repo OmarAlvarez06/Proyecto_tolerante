@@ -7,6 +7,8 @@ En esta aplicación serán utilizadas las siguientes herramientas:
 •	Istio
 Para la instalación de cada una de las herramientas anteriores se tienen que realizar lo siguiente:
 
+| Video de demostracion del proyecto: https://drive.google.com/file/d/1X_6dN8FRWqCSt_b79LppXe6p3r2vwSRA/view?usp=sharing |
+
 | INSTALACIÓN DOCKER |.
 Para la instalación de “Docker” se realizan los siguientes pasos:
 1.	Dirigirte a la página oficial de Docker el cual se encuentra en el siguiente enlace: https://www.docker.com/
